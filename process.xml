@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workflow xmlns="http://www.elementn.com/xmlns/autoforms/" >
+    <event name="Save">
+      <block>
+        <condition arg1="@@System.getRequestParameter('api')@@" operation="neq" arg2="" />
+        <condition arg1="@@System.getRequestParameter('attribute')@@" operation="neq" arg2="" />
+        <script><![CDATA[
+          helper.warning("Invalid scope: cannot have a scope with both API and attributes");
+          //helper.setWorkflowFailure();
+        ]]></script>
+        <noPersist/>
+      </block>
+      <block>
+        <condition>
+          <script><![CDATA[
+						rootkeyParam = document.getString("authServer");
+						log.error("######### " + rootkeyParam);
+						authServerKey = documentManager.getNewKey(rootkeyParam, "en", null );
+					 // authServerKey = documentManager.getNewKey(rootkeyParam, "en", {{storeName}});
+						log.error("######### " + authServerKey);
+            authserverDoc = documentManager.getDocument(authServerKey);
+						log.error("######### " + authserverDoc);
+           	//return (authserverDoc == null);
+						return false;
+         ]]></script>
+        </condition>
+        <noPersist/>
+      </block>
+      <block>
+        <branch to="Saved" />
+      </block>
+    </event>
+    <step name="entryPoint">
+      	<eventRef name="Save"/>
+    </step>
+    <step name="Saved">
+        <eventRef name="Save"/>
+    </step>
+</workflow>
